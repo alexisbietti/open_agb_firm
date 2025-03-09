@@ -122,6 +122,11 @@ void changeBacklight(s16 amount)
 	GFX_setLcdLuminance(newVal);
 }
 
+void turnOffPowerLED()
+{
+	MCU_setPowerLedPattern(MCU_PWR_LED_OFF);
+}
+
 static void updateBacklight(void)
 {
 	// Check for special button combos.
@@ -129,6 +134,10 @@ static void updateBacklight(void)
 	static bool backlightOn = true;
 	if(hidKeysDown() && kHeld)
 	{
+		// Turn off power LED
+		if (kHeld == (KEY_Y | KEY_DDOWN))
+			turnOffPowerLED();
+
 		// Adjust LCD brightness up.
 		const s16 steps = g_oafConfig.backlightSteps;
 		if(kHeld == (KEY_X | KEY_DUP))
