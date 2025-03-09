@@ -33,7 +33,7 @@ SELECT+Y - Dump hardware frame output to `/3ds/open_agb_firm/screenshots/YYYY_MM
 * The file name is the current date and time from your real-time clock.
 * If the screen output freezes, press HOME to fix it. This is a hard to track down bug that will be fixed.
 
-Y+DOWN - Turn off the power LED
+START+Y - Toggle power LED on/off.
 
 X+UP/DOWN - Adjust screen brightness up or down by `backlightSteps` units.
 

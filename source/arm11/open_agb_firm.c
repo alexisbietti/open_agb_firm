@@ -41,7 +41,7 @@
 
 
 static KHandle g_frameReadyEvent = 0;
-
+static PwrLedPattern g_lastPowerLEDPattern = MCU_PWR_LED_AUTO;
 
 
 static u32 fixRomPadding(const u32 romFileSize)
@@ -122,9 +122,19 @@ void changeBacklight(s16 amount)
 	GFX_setLcdLuminance(newVal);
 }
 
-void turnOffPowerLED()
+void togglePowerLED()
 {
-	MCU_setPowerLedPattern(MCU_PWR_LED_OFF);
+	PwrLedPattern currentPattern = MCU_getPowerLedPattern();
+	if (currentPattern == MCU_PWR_LED_OFF)
+	{
+		// Restore last know pattern.
+		MCU_setPowerLedPattern(g_lastPowerLEDPattern);
+	}
+	else
+	{
+		MCU_setPowerLedPattern(MCU_PWR_LED_OFF);
+	}
+	g_lastPowerLEDPattern = currentPattern;
 }
 
 static void updateBacklight(void)
@@ -134,9 +144,9 @@ static void updateBacklight(void)
 	static bool backlightOn = true;
 	if(hidKeysDown() && kHeld)
 	{
-		// Turn off power LED
-		if (kHeld == (KEY_Y | KEY_DDOWN))
-			turnOffPowerLED();
+		// Toggle power LED.
+		if (kHeld == (KEY_Y | KEY_START))
+			togglePowerLED();
 
 		// Adjust LCD brightness up.
 		const s16 steps = g_oafConfig.backlightSteps;
